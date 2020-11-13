@@ -2,10 +2,11 @@ package infoblox
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/infobloxopen/infoblox-go-client"
 	"log"
 	"strings"
+
+	ibclient "github.com/alanplatt/infoblox-go-client"
+	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func resourceIPAssociation() *schema.Resource {
@@ -186,7 +187,7 @@ func Resource(d *schema.ResourceData, m interface{}) error {
 	name := Name + "." + zone
 
 	if (zone != "" || len(zone) != 0) && (dnsView != "" || len(dnsView) != 0) {
-		hostRecordObj, err := objMgr.GetHostRecord(name, networkViewName, cidr, ipAddr)
+		hostRecordObj, err := objMgr.GetHostRecord(name)
 		if err != nil {
 			return fmt.Errorf("GetHostRecord failed from network block(%s):%s", cidr, err)
 		}

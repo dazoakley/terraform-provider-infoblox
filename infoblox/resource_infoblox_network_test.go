@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
+	ibclient "github.com/alanplatt/infoblox-go-client"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
-	ibclient "github.com/infobloxopen/infoblox-go-client"
 )
 
 func TestAccresourceNetwork(t *testing.T) {

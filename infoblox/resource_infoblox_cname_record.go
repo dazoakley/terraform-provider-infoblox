@@ -5,8 +5,8 @@ import (
 	"log"
 	"strings"
 
+	ibclient "github.com/alanplatt/infoblox-go-client"
 	"github.com/hashicorp/terraform/helper/schema"
-	ibclient "github.com/infobloxopen/infoblox-go-client"
 )
 
 func resourceCNAMERecord() *schema.Resource {

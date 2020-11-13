@@ -2,36 +2,37 @@ package infoblox
 
 import (
 	"fmt"
-	"github.com/alanplatt/infoblox-go-client"
+	"testing"
+
+	ibclient "github.com/alanplatt/infoblox-go-client"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
-	"testing"
 )
 
-func TestAccResourcePTRRecord(t *testing.T) {
+func TestAccResourceZoneAuth(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckPTRRecordDestroy,
+		CheckDestroy: testAccCheckZoneAuthDestroy,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccresourcePTRRecordCreate,
+				Config: testAccresourceZoneAuthCreate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccPTRRecordExists(t, "infoblox_ptr_record.foo", "10.0.0.0/24", "10.0.0.2", "test", "demo-network", "default", "a.com"),
+					testAccZoneAuthExists(t, "infoblox_zone_auth.zone_auth", "aaa.com", "default", "test"),
 				),
 			},
 			resource.TestStep{
-				Config: testAccresourcePTRRecordUpdate,
+				Config: testAccresourceZoneAuthUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccPTRRecordExists(t, "infoblox_ptr_record.foo", "10.0.0.0/24", "10.0.0.2", "test", "demo-network", "default", "a.com"),
+					testAccZoneAuthExists(t, "infoblox_zone_auth.zone_auth", "aaa.com", "default", "test"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckPTRRecordDestroy(s *terraform.State) error {
+func testAccCheckZoneAuthDestroy(s *terraform.State) error {
 	meta := testAccProvider.Meta()
 
 	for _, rs := range s.RootModule().Resources {
@@ -40,7 +41,7 @@ func testAccCheckPTRRecordDestroy(s *terraform.State) error {
 		}
 		Connector := meta.(*ibclient.Connector)
 		objMgr := ibclient.NewObjectManager(Connector, "terraform_test", "test")
-		recordName, _ := objMgr.GetPTRRecordByRef(rs.Primary.ID)
+		recordName, _ := objMgr.GetZoneAuthByRef(rs.Primary.ID)
 		if recordName != nil {
 			return fmt.Errorf("record not found")
 		}
@@ -48,7 +49,7 @@ func testAccCheckPTRRecordDestroy(s *terraform.State) error {
 	}
 	return nil
 }
-func testAccPTRRecordExists(t *testing.T, n string, cidr string, ipAddr string, networkViewName string, recordName string, dnsView string, zone string) resource.TestCheckFunc {
+func testAccZoneAuthExists(t *testing.T, n string, fqdn string, dns_view string, tenant_id string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -61,7 +62,7 @@ func testAccPTRRecordExists(t *testing.T, n string, cidr string, ipAddr string, 
 		Connector := meta.(*ibclient.Connector)
 		objMgr := ibclient.NewObjectManager(Connector, "terraform_test", "test")
 
-		recordName, _ := objMgr.GetPTRRecordByRef(rs.Primary.ID)
+		recordName, _ := objMgr.GetZoneAuthByRef(rs.Primary.ID)
 		if recordName == nil {
 			return fmt.Errorf("record not found")
 		}
@@ -70,24 +71,16 @@ func testAccPTRRecordExists(t *testing.T, n string, cidr string, ipAddr string, 
 	}
 }
 
-var testAccresourcePTRRecordCreate = fmt.Sprintf(`
-resource "infoblox_ptr_record" "foo"{
-	network_view_name="test"
-	vm_name="test-name"
+var testAccresourceZoneAuthCreate = fmt.Sprintf(`
+resource "infoblox_zone_auth" "zone_auth"{
+	fqdn = "acctest.com"
 	dns_view="default"
-	zone="a.com"
-	cidr="10.0.0.0/24"
-	ip_addr="10.0.0.2"
-	tenant_id="foo"
+	tenant_id="test"
 	}`)
 
-var testAccresourcePTRRecordUpdate = fmt.Sprintf(`
-resource "infoblox_ptr_record" "foo"{
-	network_view_name="test"
-	vm_name="test-name"
+var testAccresourceZoneAuthUpdate = fmt.Sprintf(`
+resource "infoblox_zone_auth" "zone_auth"{
+	fqdn = "acctest.com"
 	dns_view="default"
-	zone="a.com"
-	cidr="10.0.0.0/24"
-	ip_addr="10.0.0.2"
-	tenant_id="foo"
+	tenant_id="test"
 	}`)

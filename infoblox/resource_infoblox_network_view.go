@@ -2,8 +2,8 @@ package infoblox
 
 import (
 	"fmt"
+	"github.com/alanplatt/infoblox-go-client"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/infobloxopen/infoblox-go-client"
 	"log"
 )
 
