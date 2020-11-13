@@ -3,9 +3,9 @@ package infoblox
 import (
 	"time"
 
+	ibclient "github.com/alanplatt/infoblox-go-client"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
-	ibclient "github.com/infobloxopen/infoblox-go-client"
 )
 
 //Provider returns a terraform.ResourceProvider.

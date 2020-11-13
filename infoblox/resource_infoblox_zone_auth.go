@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
+	ibclient "github.com/alanplatt/infoblox-go-client"
 	"github.com/hashicorp/terraform/helper/schema"
-	ibclient "github.com/infobloxopen/infoblox-go-client"
 )
 
 func resourceZoneAuth() *schema.Resource {
@@ -75,6 +75,7 @@ func resourceZoneAuthGet(d *schema.ResourceData, m interface{}) error {
 	objMgr := ibclient.NewObjectManager(connector, "Terraform", tenantID)
 
 	obj, err := objMgr.GetZoneAuthByRef(d.Id())
+	log.Printf("[DEBUG] %s: Completed reading required auth zone ", obj)
 	if err != nil {
 		return fmt.Errorf("Getting auth zone failed from dns view (%s) : %s", fqdn, err)
 	}
@@ -113,7 +114,7 @@ func resourceZoneAuthDelete(d *schema.ResourceData, m interface{}) error {
 	tenantID := d.Get("tenant_id").(string)
 	connector := m.(*ibclient.Connector)
 
-    objMgr := ibclient.NewObjectManager(connector, "Terraform", tenantID)
+	objMgr := ibclient.NewObjectManager(connector, "Terraform", tenantID)
 
 	_, err := objMgr.DeleteZoneAuth(d.Id())
 	if err != nil {

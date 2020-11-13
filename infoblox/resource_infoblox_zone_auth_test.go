@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
+	ibclient "github.com/alanplatt/infoblox-go-client"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
-	ibclient "github.com/infobloxopen/infoblox-go-client"
 )
 
 func TestAccResourceZoneAuth(t *testing.T) {
@@ -25,7 +25,7 @@ func TestAccResourceZoneAuth(t *testing.T) {
 			resource.TestStep{
 				Config: testAccresourceZoneAuthUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccZoneAuthExists(t,  "infoblox_zone_auth.zone_auth", "aaa.com", "default", "test"),
+					testAccZoneAuthExists(t, "infoblox_zone_auth.zone_auth", "aaa.com", "default", "test"),
 				),
 			},
 		},
@@ -77,7 +77,7 @@ resource "infoblox_zone_auth" "zone_auth"{
 	dns_view="default"
 	tenant_id="test"
 	}`)
-	
+
 var testAccresourceZoneAuthUpdate = fmt.Sprintf(`
 resource "infoblox_zone_auth" "zone_auth"{
 	fqdn = "acctest.com"

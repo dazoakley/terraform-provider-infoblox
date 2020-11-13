@@ -2,9 +2,9 @@ package infoblox
 
 import (
 	"fmt"
+	"github.com/alanplatt/infoblox-go-client"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
-	"github.com/infobloxopen/infoblox-go-client"
 	"testing"
 )
 
